@@ -1,0 +1,46 @@
+#side_nav{
+    background: #BC8F8F;
+    min-width: 250px;
+    max-width: 250px;
+}
+.content{
+    min-height:100vh;
+    width:100%;
+}
+
+.sidebar li.active{
+    background: black;
+    border-radius: 8px;
+}
+
+.sidebar li.active a, .sidebar li.active a:hover{
+    color: #BC8F8F;
+}
+
+.sidebar li a{
+    color: black;
+    font-weight: bold;
+}
+
+.table{
+    margin-left: 30px;
+    color:white;
+    width: 1000px;
+}
+
+
+
+.table, th, td{
+    border:1px solid white;
+    border-collapse: collapse;
+}
+
+
+th{
+    text-align: center;
+}
+
+#myModel{
+    display:none;
+}
+

@@ -1,0 +1,300 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <link rel="stylesheet" href="{% static 'admin_style.css' %}">
+    <title>chase your dreams</title>
+  </head>
+  <body>
+    <div class="main-container d-flex">
+        <div class="sidebar" id="side_nav">
+            <div class="header-box px-2 pt-3 pb-2">
+                <h1 class="fs-4"><span class="bg-dark rounded shadow px-2 me-2" style="color:#BC8F8F">Admin Dashboard</span></h1>
+                <button class="btn d-md-none d-block close-btn px-1 py-0"><i class="fal fa-stream"></i></button>
+            </div>
+            <ul class="list-unstyled px-2">
+                <li class="">
+                    <a href="{% url 'users_list' %}" class="text-decoration-none px-2 py-4 d-block" >
+                        Users list 
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{% url 'tickets_list' %}" class="text-decoration-none px-2 py-4 d-block" >
+                        Tickets 
+                    </a>
+                </li>
+                <li class="">
+                    <a href="#" class="text-decoration-none px-2 py-4 d-block" >
+                        Profile 
+                    </a>
+                </li>
+                <li class="">
+                    <a href="#" class="text-decoration-none px-2 py-4 d-block" >
+                        Logout 
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+        <div class="content" style="background:black;">
+            <section class="container my-2 w-100 text-light" style="padding: 30px 30px 20px 30px;">
+                <div class="row">
+                    <div class="col md-2">
+                        <p style="color:white;"> the following are the list of users</p>
+                    </div>
+                    <div class="col md-8"></div>
+                    <div class="col md-1"><p></p></div>
+                    <div class="col md-1">
+                        <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#create_a_new_user_details_modal" style="background-color: white;color: black;">create</button>
+                    </div>
+                </div>
+            </section>
+            <table class="table" id="users_table" >
+                <thead>
+                    <tr>
+                        <th>
+                            UserName 
+                        </th>
+                        <th>
+                            Edit
+                        </th>
+                        <th>
+                            Delete
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="table-body" id="users_data">
+                </tbody>
+            </table>
+        </div>
+        <div class="modal" id="myModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit the user details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal" id="create_a_new_user_details_modal">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <form id="create_user_form" method="POST" name="createUserForm" onsubmit="return validate_user_form()">
+                        {% csrf_token %}
+                    <div class="modal-header" style="background-color:#BC8F8F;color:black">
+                        <h5 class="modal-title">User details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body" style="background-color:#BC8F8F;color:black">
+                        <div class="container-fluid">
+                            
+                                <div class="row">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-4">
+                                        <label for="first_name">first name</label>
+                                        <input type="text" class="form-control" name="first_name">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="middle_name">middle name</label>
+                                        <input type="text" class="form-control" name="middle_name">
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="last_name">last name</label>
+                                        <input type="text" class="form-control" name="last_name">
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-5">
+                                        <label for="username">username</label>
+                                        <input type="text" class="form-control" name="username">
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label for="emailid"> emailid</label>
+                                        <input type="text" class="form-control" name="email_id">
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-5">
+                                        <label for="password">password</label>
+                                        <input type="text" class="form-control" name="password">
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label for="confirm_password">confirm password</label>
+                                        <input type="text" class="form-control" name="confirm_password">
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-5">
+                                        <label for="pin_code">pincode</label>
+                                        <input type="text" class="form-control" name="pin_code">
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label for="nation">nation</label>
+                                        <input type="text" class="form-control" name="nation">
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-5">
+                                        <label for="address">address </label>
+                                        <textarea name="address" style="width:510px;"></textarea>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="background-color:#BC8F8F;color:black">
+                        <button type="submit" class="btn btn-primary" value="Submit">create user</button>
+                        <button type="reset" class="btn btn-primary" value="Reset">Reset </button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            window.onload = async function(){
+                let response = await fetch("http://127.0.0.1:8000/dailywork/users/");
+                var data = await response.json();
+                try{
+                    if(response.status==200){
+                        console.log(data);
+                        populateUsersTable(data);
+                    }
+                }
+                catch(err){
+                    console.log(err);
+                }
+            }
+            function populateUsersTable(data){
+                $("#users_data").empty()
+                if(data.length>0){
+                    data.forEach((itemData) => {
+                        var row_entry = $("<tr/>")
+
+                        var username = $("<td/>").html(itemData.username);
+                        var editBtn = $("<button/>").addClass("btn btn-sm").css("background-color","white").css("color","black").css("font-size","10px").attr("onClick",'modalShower()').html("edit");
+                        var deleteBtn = $("<button/>").addClass("btn btn-sm").css("background-color","white").css("color","black").css("font-size","10px").attr("onClick",'deleteUser("'+itemData.username+'")').html("delete");
+                        var edit = $('<td/>').css("text-align","center").append(editBtn);
+                        var delet = $("<td/>").css("text-align","center").append(deleteBtn);
+
+                        row_entry.append(username);
+                        row_entry.append(edit);
+                        row_entry.append(delet);
+
+                        $("#users_data").append(row_entry)
+                    });
+                }
+            }
+
+            
+          
+            function modalShower(){
+                document.getElementById("myModal").style.display="block";
+            }
+            function deleteUser(user_name){
+                let csrftoken='{{ csrf_token }}'
+                if(confirm("Do you want to delete this user?")){
+                    const url="http://127.0.0.1:8000/dailywork/users/"+user_name;
+                    $.ajax({
+                        type: "DELETE",
+                        url: url,
+                        headers:{
+                            'X-CSRFToken':csrftoken
+                        },
+                        success: function(response){
+                            alert(user_name+" has been successfully deleted");
+                            location.reload();
+                        } ,
+                        error: function(response){
+                            alert("error occurred while deleting "+user_name);
+                        }
+                    })
+                }
+            }
+            function validate_user_form(){
+                let firstname = document.forms["createUserForm"]["first_name"].value;
+                let middlename = document.forms["createUserForm"]["middle_name"].value;
+                let lastname = document.forms["createUserForm"]["last_name"].value;
+                let emailid = document.forms["createUserForm"]["email_id"].value;
+                let username = document.forms["createUserForm"]["username"].value;
+                let password = document.forms["createUserForm"]["password"].value;
+                let confirmpassword = document.forms["createUserForm"]["confirm_password"].value;
+                let pincode = document.forms["createUserForm"]["pin_code"].value;
+                let nation = document.forms["createUserForm"]["nation"].value;
+                let address = document.forms["createUserForm"]["address"].value;
+                if(username==""){
+                    alert("username cannot be empty");
+                }
+                else{
+                    if(password.length>10){
+                        alert("password length cannot be more than 10");
+                    }
+                    else if(password.length==0){
+                        alert("password field cannot be null");
+                    }
+                    else if(password!=confirmpassword){
+                        alert("password doesn't match")
+                    }
+                    else{
+                        let data={
+                            username: username,
+                            email_id:emailid,
+                            password:password,
+                            first_name:firstname,
+                            middle_name:middlename,
+                            last_name:lastname,
+                            pin_code:pincode,
+                            nation:nation,
+                            address:address 
+                        }
+                        handlePost(data);
+                    }
+                }
+            }
+            function handlePost(data){
+            const url="http://127.0.0.1:8000/dailywork/users/";
+            let csrftoken='{{ csrf_token }}'
+            console.log(data);
+
+            $.ajax({
+                url:url,
+                type:"POST",
+                headers:{
+                            'X-CSRFToken':csrftoken
+                        },
+                data:JSON.stringify(data),
+                dataType: 'json',
+                contentType: "application/json",
+                success: function(result,status,jqXHR ){
+              console.log("successfully added");
+            },
+            error(jqXHR, textStatus, errorThrown){
+                //Do something
+                alert(errorThrown);
+            }
+                })
+        }
+        </script>
+  </body>
+</html>

@@ -1,0 +1,46 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md bg">
+        <a href="" style="color:#BC8F8F" class="navbar-brand fs-3 ms-3">Chase Your Dreams</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collaps" data-bs-target="#btn">
+        <i class='bx bx-menu'></i>
+    </button>
+    <div class="collaps navbar-collapse" id="btn">
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+                <a href="{% url 'index' %}" style="color:#BC8F8F" class="nav-link mx-3">home</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" style="color:#BC8F8F" class="nav-link mx-3 ">admin</a>
+            </li>
+            <!--
+            <li class="nav-item">
+                <a href="#" style="color:#BC8F8F" class="nav-link mx-3">timetable</a>
+            </li>-->
+            <li class="nav-item">
+                <a href="{% url 'register' %}" style="color:#BC8F8F" class="nav-link mx-3 ">register</a>
+            </li>
+            <!--
+            <li class="nav-item">
+                <a href="#" style="color:#BC8F8F" class="nav-link mx-3 ">help</a>
+            </li>-->
+            <li class="nav-item">
+                <a href="{% url 'login' %}" style="color:#BC8F8F" class="nav-link mx-3 ">login</a>
+            </li>
+        </ul>
+    </div>
+    </nav>
+  </body>
+</html>

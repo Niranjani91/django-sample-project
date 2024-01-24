@@ -1,0 +1,139 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <link rel="stylesheet" href="{% static 'login_style.css' %}">
+    <title>chase your dreams</title>
+    <style>
+        #content_profile{
+            display: none;
+        }
+        #section_of_profile{
+    background-color: black;
+    padding-left: 40px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    padding-right: 40px;
+}
+    </style>
+  </head>
+  <body style="background-color:#BC8F8F">
+    <div class="content" id="content_profile">
+        <section class="container my-5 text-light" style="padding-top:25px">
+            <div id="section_of_profile">
+                <h1 style="text-align:center">Profile</h1>
+                <br>
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-4">
+                        <label for="first_name">first name</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="middle_name">middle name</label>
+                        <input type="text" class="form-control" id="middle_name" name="middle_name">
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <label for="last_name">last name</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name">
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        <label for="username">username</label>
+                        <input type="text" class="form-control" id="username" name="username">
+                    </div>
+                    <div class="col-md-5">
+                        <label for="emailid"> emailid</label>
+                        <input type="text" class="form-control" id="email_id" name="email_id">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        <label for="pin_code">pincode</label>
+                        <input type="text" class="form-control" id="pin_code" name="pin_code">
+                    </div>
+                    <div class="col-md-5">
+                        <label for="nation">nation</label>
+                        <input type="text" class="form-control" id="nation" name="nation">
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-5">
+                        <label for="address">address </label>
+                        <textarea name="address" id="address" style="width:510px;"></textarea>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <button type="submit" class="btn btn-md" style="font-weight:bold;margin-left:100px;color:black;background-color:white" value="edit">edit</button>
+            
+            </div>
+        </section>
+    </div>
+    <script>
+         window.onload = async function(){
+            var user_name = "{{user_name}}";
+            let url = "http://127.0.0.1:8000/dailywork/users/"+user_name;
+            let response = await fetch(url);
+            var data = await response.json();
+            try{
+                if(response.status==200){
+                    console.log(data);
+                    populateUserForm(data);
+                }
+            }
+            catch(err){
+                console.log(err);
+            }
+            }
+        function populateUserForm(data){
+            var firstname = document.getElementById("first_name");
+            var middlename = document.getElementById("middle_name");
+            var lastname = document.getElementById("last_name");
+            var nation = document.getElementById("nation");
+            var pincode = document.getElementById("pin_code");
+            var emailid = document.getElementById("email_id");
+            var address = document.getElementById("address");
+            var username = document.getElementById("username");
+            firstname.setAttribute("value",data.first_name);
+            middlename.setAttribute("value",data.middle_name);
+            lastname.setAttribute("value",data.last_name);
+            nation.setAttribute("value",data.nation);
+            pincode.setAttribute("value",data.pin_code);
+            emailid.setAttribute("value",data.email_id);
+            address.setAttribute("value",data.address);
+            username.setAttribute("value",data.username);
+
+            firstname.setAttribute("readonly",true);
+            middlename.setAttribute("readonly",true);
+            lastname.setAttribute("readonly",true);
+            nation.setAttribute("readonly",true);
+            pincode.setAttribute("readonly",true);
+            emailid.setAttribute("readonly",true);
+            address.setAttribute("readonly",true);
+            username.setAttribute("readonly",true);
+
+            document.getElementById("content_profile").style.display="block";
+        }
+        
+    </script>
+  </body>
+</html>

@@ -1,0 +1,244 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <link rel="stylesheet" href="{% static 'admin_style.css' %}">
+    <title>chase your dreams</title>
+  </head>
+  <body>
+    <div class="main-container d-flex">
+        <div class="sidebar" id="side_nav">
+            <div class="header-box px-2 pt-3 pb-2">
+                <h1 class="fs-4"><span class="bg-dark rounded shadow px-2 me-2" style="color:#BC8F8F">Admin Dashboard</span></h1>
+                <button class="btn d-md-none d-block close-btn px-1 py-0"><i class="fal fa-stream"></i></button>
+            </div>
+            <ul class="list-unstyled px-2">
+                <li class="">
+                    <a href="{% url 'users_list' %}" class="text-decoration-none px-2 py-4 d-block" >
+                        Users list 
+                    </a>
+                </li>
+                <li class="">
+                    <a href="{% url 'tickets_list' %}" class="text-decoration-none px-2 py-4 d-block" >
+                        Tickets 
+                    </a>
+                </li>
+                <li class="">
+                    <a href="#" class="text-decoration-none px-2 py-4 d-block" >
+                        Profile 
+                    </a>
+                </li>
+                <li class="">
+                    <a href="#" class="text-decoration-none px-2 py-4 d-block" >
+                        Logout 
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+        <div class="content" style="background:black;">
+            <section class="container my-2 w-100 text-light" style="padding: 30px 30px 20px 30px;">
+                <div class="row">
+                    <div class="col md-2">
+                        <p style="color:white;"> the following are the list of tickets</p>
+                    </div>
+                    <div class="col md-8"></div>
+                    <div class="col md-1"><p></p></div>
+                    <div class="col md-1">
+                        <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#create_a_new_ticket" style="background-color: white;color: black;">create</button>
+                    </div>
+                </div>
+            </section>
+            <table class="table" id="tickets_table" >
+                <thead>
+                    <tr>
+                        <th>
+                            UserName 
+                        </th>
+                        <th>
+                            Title 
+                        </th>
+                        <th>
+                            Description 
+                        </th>
+                        <th>
+                            Status 
+                        </th>
+                        <th>
+                            Edit 
+                        </th>
+                        <th>
+                            Delete
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="table-body" id="tickets_data">
+                </tbody>
+            </table>
+        </div>
+        <div class="modal" id="create_a_new_ticket">
+            <div class="modal-dialog modal-md modal-dialog-centered">
+                <div class="modal-content">
+                    <form id="create_ticket_form" method="POST" name="createTicketForm" onsubmit="return validate_ticket_form()">
+                        {% csrf_token %}
+                    <div class="modal-header" style="background-color:#BC8F8F;color:black">
+                        <h5 class="modal-title">User details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body" style="background-color:#BC8F8F;color:black">
+                        <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-10">
+                                        <label for="username">username</label>
+                                        <input type="text" class="form-control" name="username">
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-10">
+                                        <label for="status">status</label>
+                                        <input type="text" class="form-control" name="status">
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-10">
+                                        <label for="title">title</label>
+                                        <input type="text" class="form-control" name="title">
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-5">
+                                        <label for="description">description </label>
+                                        <textarea name="description"></textarea>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="background-color:#BC8F8F;color:black">
+                        <button type="submit" class="btn btn-primary" value="Submit">create user</button>
+                        <button type="reset" class="btn btn-primary" value="Reset">Reset </button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script>
+            window.onload = async function(){
+                let response = await fetch("http://127.0.0.1:8000/dailywork/tickets");
+                var data = await response.json();
+                try{
+                    if(response.status==200){
+                        console.log(data);
+                        populateTicketsTable(data);
+                    }
+                }
+                catch(err){
+                    console.log(err);
+                }
+            }
+            function deleteTicket(main_user_name,title,description,status){
+                let csrftoken='{{ csrf_token }}'
+                if(confirm("Do you want to delete this ticket?")){
+                    const url="http://127.0.0.1:8000/dailywork/"+"tickets/"+main_user_name+"&"+title+"&"+status;
+                    alert(url);
+                    $.ajax({
+                        type: "DELETE",
+                        url: url,
+                        headers:{
+                            'X-CSRFToken':csrftoken
+                        },
+                        success: function(response){
+                            alert("ticket has been successfully deleted");
+                            location.reload();
+                        } ,
+                        error: function(response){
+                            alert("error occurred while deleting ");
+                        }
+                    })
+                }
+            }
+            function populateTicketsTable(data){
+                $("#tickets_data").empty()
+                if(data.length>0){
+                    data.forEach((itemData) => {
+                        var row_entry = $("<tr/>")
+
+                        var username = $("<td/>").html(itemData.username);
+                        var title = $("<td/>").html(itemData.ticket_title);
+                        var description = $("<td/>").html(itemData.ticket_description);
+                        var status = $("<td/>").html(itemData.ticket_status);
+                        const arra= [itemData.username,itemData.ticket_title,itemData.ticket_description,itemData.ticket_status];
+                        $('#'+arra).toArray
+                        var editBtn = $("<button/>").addClass("btn btn-sm").css("background-color","white").css("color","black").css("font-size","10px").attr("onClick",'modalShower()').html("edit");
+                        var deleteBtn = $("<button/>").addClass("btn btn-sm").css("background-color","white").css("color","black").css("font-size","10px").click(function(){deleteTicket(itemData.username,itemData.ticket_title,itemData.ticket_description,itemData.ticket_status);}).html("delete");
+                        var edit = $('<td/>').css("text-align","center").append(editBtn);
+                        var delet = $("<td/>").css("text-align","center").append(deleteBtn);
+
+                        row_entry.append(username);
+                        row_entry.append(title);
+                        row_entry.append(description);
+                        row_entry.append(status);
+                        row_entry.append(edit);
+
+                        row_entry.append(delet);
+
+                        $("#tickets_data").append(row_entry)
+                    });
+                }
+            }
+            function validate_ticket_form(){
+                let username = document.forms["createTicketForm"]["username"].value;
+                let ticket_title = document.forms["createTicketForm"]["title"].value;
+                let ticket_description = document.forms["createTicketForm"]["description"].value;
+                let ticket_status = document.forms["createTicketForm"]["status"].value;
+                        let data={
+                            username: username,
+                            ticket_title: ticket_title,
+                            ticket_description: ticket_description,
+                            ticket_status: ticket_status
+                        }
+                        handlePost(data);
+                }
+            function handlePost(data){
+            const url="http://127.0.0.1:8000/dailywork/tickets";
+            let csrftoken='{{ csrf_token }}'
+            console.log(data);
+
+            $.ajax({
+                url:url,
+                type:"POST",
+                headers:{
+                            'X-CSRFToken':csrftoken
+                        },
+                data:JSON.stringify(data),
+                dataType: 'json',
+                contentType: "application/json",
+                success: function(result,status,jqXHR ){
+              console.log("successfully added");
+            },
+            error(jqXHR, textStatus, errorThrown){
+                //Do something
+                alert(errorThrown);
+            }
+                })
+        }
+        </script>
+  </body>
+</html>

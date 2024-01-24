@@ -1,0 +1,33 @@
+* {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+.bg{
+    background-color: black;
+    color: green;
+    font-weight: 600;
+}
+#body_of_the_home_page{
+    background-repeat: no-repeat;
+    background-size: 1800px 900px;
+    background-attachment: fixed;
+}
+
+#body_of_the_registered_page{
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    font-size: medium;
+}
+
+#div_of_registered{
+    padding-left: 20px;
+    padding-top: 20px;
+}
+
+.navbar-toggler{
+    background-color: beige;
+}
+
+
+

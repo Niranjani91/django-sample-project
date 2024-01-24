@@ -1,0 +1,23 @@
+#body_of{
+    background-repeat: no-repeat;
+    background-size: 2000px 1200px;
+    background-attachment: fixed;
+    font-family: sans-serif;
+}
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+#section_of_login{
+    background-color: #BC8F8F;
+    padding-left: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+}
+
+.row{
+    padding-left: 10px;
+}
+

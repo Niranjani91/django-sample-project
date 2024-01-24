@@ -1,0 +1,428 @@
+{% load static %}
+<html>
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="{% static 'timetables_style.css' %}">
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+        <style>
+            .wrapper {
+                margin: 80px auto;
+                max-width: 2000px;
+            }
+
+            .container-calendar {
+                background: black;
+                padding: 30px;
+                max-width: 500px;
+                height: 580px;
+                margin: 0 auto;
+                margin-left: 60px;
+                margin-top: 60px;
+                margin-bottom: 60px;
+                overflow: auto;
+            }
+
+            .button-container-calendar button {
+                cursor: pointer;
+                display: inline-block;
+                zoom: 1;
+                background: #BC8F8F;
+                color: black;
+                border: 1px solid #BC8F8F;
+                border-radius: 5px;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .table-calendar {
+                border-collapse: collapse;
+                width: 100%;
+                height:65%;
+                text-align: center;
+                color:#BC8F8F;
+            }
+
+            .table-calendar td, .table-calendar th {
+                padding: 10px;
+                border: 1px solid #e2e2e2;
+                text-align: center;
+                vertical-align: top;
+            }
+
+            .date-picker.selected {
+                font-weight: bold;
+                color: black;
+                background-color: #BC8F8F;
+                /*outline: 1px dashed white;*/
+            }
+
+            .date-picker.selected span {
+                border-bottom: 2px solid currentColor;
+            }
+
+            #monthAndYear {
+                text-align: center;
+                display: inline-block;
+                margin-top: 0;
+                color:#BC8F8F;
+                margin-left: 90px;
+                position: relative;
+            }
+
+            .button-container-calendar {
+                position: relative;
+                margin-bottom: 1em;
+                overflow: hidden;
+                clear: both;
+            }
+
+            #previous {
+                float: left;
+            }
+
+            #next {
+                float: right;
+            }
+
+            .footer-container-calendar {
+                margin-top: 1em;
+                border-top: 1px solid #dadada;
+                padding: 20px 0;
+                color:#BC8F8F;
+            }
+
+            .footer-container-calendar select {
+                cursor: pointer;
+                display: inline-block;
+                zoom: 1;
+                background:#BC8F8F;
+                color: black;
+                border: 1px solid #bfc5c5;
+                border-radius: 3px;
+                padding: 5px 1em;
+            }
+
+            .flex-container {
+                display: flex;
+                justify-content: stretch;
+                padding-left:20px;
+                padding-right:20px;
+                padding-top:5px;
+            }
+
+            .flex-child {
+                flex: 1;
+                border: 2px solid yellow;
+            }  
+
+            .flex-child:first-child {
+                margin-right: 20px;
+                width: 45%;
+            } 
+
+
+            .flex-child:last-child {
+                /*flex: auto;*/
+                padding-top:30px;
+            } 
+        </style>
+    </head>
+    <body style="background-color:#BC8F8F">
+        <div class="flex-container">
+            <div class="flex-child">
+                <div class="wrapper">
+                    <div class="container-calendar">
+                        
+                        <div class="button-container-calendar">
+                            <button id="previous" onclick="previous()">&#8249;</button>
+                            <h3 id="monthAndYear" ></h3>
+                            <button id="next" onclick="next()">&#8250;</button>
+                        </div>
+                        <table class="table-calendar" id="calendar" data-lang="en">
+                            <thead id="thead-month"></thead>
+                            <tbody id="calendar-body"></tbody>
+                        </table>
+                        <div class="footer-container-calendar">
+                        <label for="month">Jump To: </label>
+                        <select id="month" onchange="jump()">
+                                <option value=0>Jan</option>
+                                <option value=1>Feb</option>
+                                <option value=2>Mar</option>
+                                <option value=3>Apr</option>
+                                <option value=4>May</option>
+                                <option value=5>Jun</option>
+                                <option value=6>Jul</option>
+                                <option value=7>Aug</option>
+                                <option value=8>Sep</option>
+                                <option value=9>Oct</option>
+                                <option value=10>Nov</option>
+                                <option value=11>Dec</option>
+                            </select>
+                            <select id="year" onchange="jump()"></select>       
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-child">
+                <container>
+                <table  class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th >
+                                date
+                            </th>
+                            <th  >
+                                title 
+                            </th>
+                            <th  >
+                                description
+                            </th>
+                            <th >
+                                status
+                            </th>
+                            <th >
+                                comments
+                            </th>
+                            <th>
+                                edit
+                            </th>
+                            <th>
+                                delete
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-body" id="events_data">
+                    </tbody>
+                </table>
+                </container>
+            </div>
+        </div>
+        
+        <script>
+            function generate_year_range(start, end) {
+                var years = "";
+                for (var year = start; year <= end; year++) {
+                    years += "<option value='" + year + "'>" + year + "</option>";
+                }
+                return years;
+            }
+
+            today = new Date();
+            currentMonth = today.getMonth();
+            currentYear = today.getFullYear();
+            selectYear = document.getElementById("year");
+            selectMonth = document.getElementById("month");
+
+
+            createYear = generate_year_range(1970, 2050);
+            /** or
+             * createYear = generate_year_range( 1970, currentYear );
+             */
+
+            document.getElementById("year").innerHTML = createYear;
+
+            var calendar = document.getElementById("calendar");
+            var lang = calendar.getAttribute('data-lang');
+
+            var months = "";
+            var days = "";
+
+            var monthDefault = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+            var dayDefault = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+            if (lang == "en") {
+                months = monthDefault;
+                days = dayDefault;
+            } else if (lang == "id") {
+                months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+                days = ["Ming", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+            } else if (lang == "fr") {
+                months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+                days = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"];
+            } else {
+                months = monthDefault;
+                days = dayDefault;
+            }
+
+
+            var $dataHead = "<tr>";
+            for (dhead in days) {
+                $dataHead += "<th data-days='" + days[dhead] + "'>" + days[dhead] + "</th>";
+            }
+            $dataHead += "</tr>";
+
+            //alert($dataHead);
+            document.getElementById("thead-month").innerHTML = $dataHead;
+
+
+            monthAndYear = document.getElementById("monthAndYear");
+            showCalendar(currentMonth, currentYear);
+
+
+
+            function next() {
+                currentYear = (currentMonth === 11) ? currentYear + 1 : currentYear;
+                currentMonth = (currentMonth + 1) % 12;
+                showCalendar(currentMonth, currentYear);
+            }
+
+            function previous() {
+                currentYear = (currentMonth === 0) ? currentYear - 1 : currentYear;
+                currentMonth = (currentMonth === 0) ? 11 : currentMonth - 1;
+                showCalendar(currentMonth, currentYear);
+            }
+
+            function jump() {
+                currentYear = parseInt(selectYear.value);
+                currentMonth = parseInt(selectMonth.value);
+                showCalendar(currentMonth, currentYear);
+            }
+
+            function showCalendar(month, year) {
+
+                var firstDay = ( new Date( year, month ) ).getDay();
+
+                tbl = document.getElementById("calendar-body");
+
+                
+                tbl.innerHTML = "";
+
+                
+                monthAndYear.innerHTML = months[month] + " " + year;
+                selectYear.value = year;
+                selectMonth.value = month;
+
+                // creating all cells
+                var date = 1;
+                for ( var i = 0; i < 6; i++ ) {
+                    
+                    var row = document.createElement("tr");
+
+                    
+                    for ( var j = 0; j < 7; j++ ) {
+                        if ( i === 0 && j < firstDay ) {
+                            cell = document.createElement( "td" );
+                            cellText = document.createTextNode("");
+                            cell.appendChild(cellText);
+                            row.appendChild(cell);
+                        } else if (date > daysInMonth(month, year)) {
+                            break;
+                        } else {
+                            cell = document.createElement("td");
+                            cell.setAttribute("data-date", date);
+                            cell.setAttribute("data-month", month + 1);
+                            cell.setAttribute("data-year", year);
+                            cell.setAttribute("data-month_name", months[month]);
+                            
+                            cell.className = "date-picker";
+                            cell.innerHTML = "<span>" + date + "</span>";
+
+                            if ( date === today.getDate() && year === today.getFullYear() && month === today.getMonth() ) {
+                                cell.className = "date-picker selected";
+                            }
+                            row.appendChild(cell);
+                            date++;
+                            
+
+                        }
+                        cell.setAttribute("onclick","div_func(this.innerText)");
+                       
+
+                    }
+
+                    tbl.appendChild(row);
+                }
+
+            }
+
+            function div_func(selected_date){
+                month_name = document.getElementById("month").value;
+                year_name = document.getElementById("year").value;
+                var month=parseInt(month_name);
+                month=month+1;
+                var user_name = "{{user_name}}";
+                const url="http://127.0.0.1:8000/dailywork/"+user_name+"/"+"timetable/"+year_name+"-"+month+"-"+selected_date;
+                $.ajax({
+                        type: "GET",
+                        url: url,
+                        success: function(data){
+                            populateEventsTable(data);
+                        } ,
+                        error: function(response){
+                            alert("error occurred");
+                        }
+                    })
+            }
+
+            function populateEventsTable(data){
+                $("#events_data").empty()
+                if(data.length>0){
+                    data.forEach((itemData) => {
+                        var row_entry = $("<tr/>")
+                        const myarray=[itemData.username,itemData.event_date,itemData.event_title]
+
+                        var date= $("<td/>").html(itemData.event_date);
+                        var description=$("<td/>").html(itemData.event_description);
+                        var title= $("<td/>").html(itemData.event_title);
+                        var comments= $("<td/>").html(itemData.event_comments);
+                        var status=$("<td/>").html(itemData.event_completed);
+                        var editBtn = $("<button/>").addClass("btn btn-sm").css("background-color","white").css("color","black").css("font-size","10px").attr("onClick",'modalShower()').html("edit");
+                        var deleteBtn = $("<button/>").addClass("btn btn-sm").css("background-color","white").css("color","black").css("font-size","10px").attr("onClick",'deleteEvent("'+itemData.username+'/'+itemData.event_date+'/'+itemData.event_title+'")').html("delete");
+                        var edit = $('<td/>').css("text-align","center").append(editBtn);
+                        var delet = $("<td/>").css("text-align","center").append(deleteBtn);
+
+                        row_entry.append(date);
+                        row_entry.append(title);
+                        row_entry.append(description);
+                        
+                        row_entry.append(status);
+                        row_entry.append(comments);
+                        row_entry.append(edit);
+                        row_entry.append(delet);
+
+                        $("#events_data").append(row_entry)
+                    });
+                }
+                else{
+                    var row_entry = $("<tr/>")
+                    $("#events_data").empty()
+                    var row_enter=$("<td/>").css("text-align","center").attr("colspan",7).html("no events are present");
+                    row_entry.append(row_enter);
+                    $("#events_data").append(row_entry)
+                }
+            }
+
+            function deleteEvent(username_date_title){
+                let csrftoken='{{ csrf_token }}'
+                const li = username_date_title.split("/")
+                if(confirm("Do you want to delete this event?")){
+                    const url="http://127.0.0.1:8000/dailywork/"+li[0]+"/timetable/"+li[1]+"/"+li[2];
+                    $.ajax({
+                        type: "DELETE",
+                        url: url,
+                        headers:{
+                            'X-CSRFToken':csrftoken
+                        },
+                        success: function(response){
+                            alert(li[2]+" has been successfully deleted");
+                            location.reload();
+                        } ,
+                        error: function(response){
+                            alert("error occurred while deleting " +li[2]);
+                        }
+                    })
+                }
+            }
+
+
+            function daysInMonth(iMonth, iYear) {
+                return 32 - new Date(iYear, iMonth, 32).getDate();
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,155 @@
+{% load static %}
+<!DOCTYPE html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <link rel="stylesheet" href="{% static 'login_style.css' %}">
+
+    
+</head>
+<body id="body_of" style="background-image: url('{% static 'chaseyourdreams_login.jpg' %}');background-size:2000px 1200px;">
+    <section class="container my-5 w-100 text-light " style="padding-top:25px">
+        <form id="section_of_login" name="registerForm" method="POST" onsubmit="return validateRegisterForm()">
+            {% csrf_token %}
+            <h1 style="text-align:center">Registration form</h1>
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-4">
+                    <label for="first_name">first name</label>
+                    <input type="text" class="form-control" name="first_name">
+                </div>
+                <div class="col-md-3">
+                    <label for="middle_name">middle name</label>
+                    <input type="text" class="form-control" name="middle_name">
+                </div>
+                
+                <div class="col-md-3">
+                    <label for="last_name">last name</label>
+                    <input type="text" class="form-control" name="last_name">
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-5">
+                    <label for="username">username</label>
+                    <input type="text" class="form-control" name="username">
+                </div>
+                <div class="col-md-5">
+                    <label for="emailid"> emailid</label>
+                    <input type="text" class="form-control" name="email_id">
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-5">
+                    <label for="password">password</label>
+                    <input type="text" class="form-control" name="password">
+                </div>
+                <div class="col-md-5">
+                    <label for="confirm_password">confirm password</label>
+                    <input type="text" class="form-control" name="confirm_password">
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-5">
+                    <label for="pin_code">pincode</label>
+                    <input type="text" class="form-control" name="pin_code">
+                </div>
+                <div class="col-md-5">
+                    <label for="nation">nation</label>
+                    <input type="text" class="form-control" name="nation">
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-5">
+                    <label for="address">address </label>
+                    <textarea name="address" style="width:510px;"></textarea>
+                </div>
+            </div>
+            <br>
+            <center>
+            <button type="submit" class="btn btn-md" style="color:#BC8F8F;background-color:white" value="Submit">submit</button>
+            <button type="reset" class="btn btn-md" style="margin-left:20px;color:#BC8F8F;background-color:white" value="Reset">Reset </button>
+            <br>
+            <br>
+            </center>
+            <center><p> already an existing user <a style="color:white" href="{% url 'login' %}">login</a></p></center>
+    </form>
+    </section>
+    <script>
+        function validateRegisterForm(){
+            let firstname = document.forms["registerForm"]["first_name"].value;
+            let middlename = document.forms["registerForm"]["middle_name"].value;
+            let lastname = document.forms["registerForm"]["last_name"].value;
+            let emailid = document.forms["registerForm"]["email_id"].value;
+            let username = document.forms["registerForm"]["username"].value;
+            let password = document.forms["registerForm"]["password"].value;
+            let confirmpassword = document.forms["registerForm"]["confirm_password"].value;
+            let pincode = document.forms["registerForm"]["pin_code"].value;
+            let nation = document.forms["registerForm"]["nation"].value;
+            let address = document.forms["registerForm"]["address"].value;
+            if(username==""){
+                alert("username cannot be empty");
+            }
+            else{
+                if(password.length>10){
+                    alert("password length cannot be more than 10");
+                }
+                else if(password.length==0){
+                    alert("password field cannot be null");
+                }
+                else if(password!=confirmpassword){
+                    alert("password doesn't match")
+                }
+                else{
+                    let data={
+                        username: username,
+                        email_id:emailid,
+                        password:password,
+                        first_name:firstname,
+                        middle_name:middlename,
+                        last_name:lastname,
+                        pin_code:pincode,
+                        nation:nation,
+                        address:address 
+                    }
+                    handlePost(data);
+                }
+            }
+        }
+        function handlePost(data){
+            const url="http://127.0.0.1:8000/dailywork/users/";
+            let csrftoken='{{ csrf_token }}'
+            console.log(data);
+
+            $.ajax({
+                url:url,
+                type:"POST",
+                headers:{
+                            'X-CSRFToken':csrftoken
+                        },
+                data:JSON.stringify(data),
+                dataType: 'json',
+                contentType: "application/json",
+                success: function(result,status,jqXHR ){
+              console.log("successfully added");
+         },
+         error(jqXHR, textStatus, errorThrown){
+             //Do something
+             alert(errorThrown);
+         }
+            })
+        }
+    </script>
+</body>
+</html>
