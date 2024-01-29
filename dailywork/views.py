@@ -10,6 +10,7 @@ from dailywork.models import tickets_info
 
 
 from django.http import JsonResponse
+from django.contrib.auth import authenticate,login,logout
 
 from chaseyourdreams.serializers import UserInfoSerializer
 from chaseyourdreams.serializers import UserEventsInfoSerializer
@@ -37,6 +38,12 @@ def register(request):
     return render(request,"./actual_register.html")
     
 
+def admin_log_out(request):
+    logout(request)
+    return redirect('home')
+
+
+
 def registered(request):
     template = loader.get_template('registered.html')
     return HttpResponse(template.render())
@@ -49,6 +56,10 @@ def users_list(request):
 
 def tickets_list(request):
     return render(request,"tickets_list.html")
+
+def user_logout_page(request,main_user_name):
+    logout(request)
+    return redirect('home')
 
 def login(request):
     if request.method == 'POST':

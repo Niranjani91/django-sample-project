@@ -20,5 +20,7 @@ urlpatterns = [
     path('<str:main_user_name>/timetable/<str:event_date>/<str:event_title>',views.events_details_info,name="put_delete_get"),
     path('tickets',views.ticket_info_list,name="tickets"),
     path('admin/tickets_list',views.tickets_list,name="tickets_list"),
-    path('tickets/<str:main_user_name>&<str:main_ticket_title>&<str:main_ticket_status>',views.ticket_details)
+    path('admin/logout',views.admin_log_out,name="admin_log_out"),
+    path('tickets/<str:main_user_name>&<str:main_ticket_title>&<str:main_ticket_status>',views.ticket_details),
+    path('<str:main_user_name>/logout',views.user_logout_page,name='user_logout_page')
 ]

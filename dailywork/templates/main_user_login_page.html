@@ -185,7 +185,7 @@
                     <li><a class="dropdown-item" style="color:#BC8F8F" href="{% url 'user_profile_page' main_user_name=user_name %}">profile</a></li>
                     
                     <li><a class="dropdown-item" style="color:#BC8F8F" href="{% url 'user_ticket_page' main_user_name=user_name %}">account/help</a></li>
-                    <li><a class="dropdown-item" style="color:#BC8F8F" href="#">logout</a></li>
+                    <li><a class="dropdown-item" style="color:#BC8F8F" href="{% url 'user_logout_page' main_user_name=user_name %}">logout</a></li>
                   </ul>
             </li>
         </ul>

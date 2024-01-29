@@ -116,7 +116,7 @@
 
             .flex-child {
                 flex: 1;
-                border: 2px solid yellow;
+                /*border: 2px solid yellow;*/
             }  
 
             .flex-child:first-child {
@@ -169,7 +169,19 @@
             </div>
             <div class="flex-child">
                 <container>
-                <table  class="table table-sm">
+                    <section class="container my-2 w-100 text-light" style="padding: 30px 30px 20px 30px;">
+                        <div class="row">
+                            <div class="col md-2">
+                                <p style="color:white;"> Events</p>
+                            </div>
+                            <div class="col md-8"></div>
+                            <div class="col md-1"><p></p></div>
+                            <div class="col md-1">
+                                <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#create_a_new_event" style="background-color: white;color: black;">create</button>
+                            </div>
+                        </div>
+                    </section>
+                    <table  class="table table-sm">
                     <thead>
                         <tr>
                             <th >
@@ -199,6 +211,62 @@
                     </tbody>
                 </table>
                 </container>
+            </div>
+        </div>
+        <div class="modal" id="create_a_new_event">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <form id="create_event_form" method="POST" name="createEventForm" onsubmit="return validate_event_form()">
+                        {% csrf_token %}
+                    <div class="modal-header" style="background-color:#BC8F8F;color:black">
+                        <h5 class="modal-title">Event details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body" style="background-color:#BC8F8F;color:black">
+                        <div class="container-fluid">
+                            
+                                <div class="row">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-4">
+                                        <label for="event_title">event title</label>
+                                        <input type="text" class="form-control" name="event_title">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="event_description">event description</label>
+                                        <textarea name="event_description"></textarea>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="comments">comments</label>
+                                        <input type="text" class="form-control" name="comments">
+                                    </div>
+                                    <div class="col-md-1"></div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-1"></div>
+                                    <div class="col-md-5">
+                                        <label for="status">status</label>
+                                        <select name="status" id="status">
+                                            <option value="True">True</option>
+                                            <option value="False">False</option>
+                                          </select>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label for="date"> date</label>
+                                        <input type="date" class="form-control" name="date">
+                                    </div>
+                                </div>
+                                <br>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="background-color:#BC8F8F;color:black">
+                        <button type="submit" class="btn btn-primary" value="Submit">create event</button>
+                        <button type="reset" class="btn btn-primary" value="Reset">Reset </button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    </div>
+                    </form>
+                </div>
             </div>
         </div>
         
@@ -264,7 +332,51 @@
             showCalendar(currentMonth, currentYear);
 
 
+            function validate_event_form(){
+                var user_name = "{{user_name}}";
+                let event_title = document.forms["createEventForm"]["event_title"].value;
+                let event_description = document.forms["createEventForm"]["event_description"].value;
+                let comments = document.forms["createEventForm"]["comments"].value;
+                let date = document.forms["createEventForm"]["date"].value;
+                let status = document.forms["createEventForm"]["status"].value;
+                alert(user_name);
+                let data=
+                    {
+    "event_title":event_title,
+    "event_description":event_description,
+    "event_comments":comments,
+    "event_date":date,
+    "event_completed":status,
+    "username":user_name
+}
+handlePost(data);
 
+            }
+
+            function handlePost(data){
+                const url="http://127.0.0.1:8000/dailywork/"+data.username+"/"+"timetable/"+data.event_date;
+                alert(url);
+            let csrftoken='{{ csrf_token }}'
+            console.log(data);
+
+            $.ajax({
+                url:url,
+                type:"POST",
+                headers:{
+                            'X-CSRFToken':csrftoken
+                        },
+                data:JSON.stringify(data),
+                dataType: 'json',
+                contentType: "application/json",
+                success: function(result,status,jqXHR ){
+              console.log("successfully added");
+            },
+            error(jqXHR, textStatus, errorThrown){
+                //Do something
+                alert(errorThrown);
+            }
+                })
+            }
             function next() {
                 currentYear = (currentMonth === 11) ? currentYear + 1 : currentYear;
                 currentMonth = (currentMonth + 1) % 12;
@@ -330,6 +442,7 @@
                             
 
                         }
+                        
                         cell.setAttribute("onclick","div_func(this.innerText)");
                        
 
@@ -343,6 +456,7 @@
             function div_func(selected_date){
                 month_name = document.getElementById("month").value;
                 year_name = document.getElementById("year").value;
+                //document.getElementsByClassName("date-picker").style.backgroundColor="red";
                 var month=parseInt(month_name);
                 month=month+1;
                 var user_name = "{{user_name}}";
