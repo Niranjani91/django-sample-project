@@ -266,3 +266,10 @@ def user_ticket_page(request,main_user_name):
 def user_timetable_page(request,main_user_name):
     return render(request,"timetable.html",{"user_name":main_user_name})
 
+@api_view(['GET'])
+def user_ticket_info_list(request,main_user_name):
+    if request.method == "GET":
+        all_tickets = tickets_info.objects.filter(username=main_user_name)
+        serializer = TicketInfoSerializer(all_tickets,many=True)
+        return JsonResponse(serializer.data,safe=False)
+

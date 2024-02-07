@@ -19,6 +19,7 @@ urlpatterns = [
     path('<str:main_user_name>/timetable/<str:event_date>',views.get_whole_events,name="get_whole_events"),
     path('<str:main_user_name>/timetable/<str:event_date>/<str:event_title>',views.events_details_info,name="put_delete_get"),
     path('tickets',views.ticket_info_list,name="tickets"),
+    path('tickets/<str:main_user_name>',views.user_ticket_info_list,name="user_ticket_list"),
     path('admin/tickets_list',views.tickets_list,name="tickets_list"),
     path('admin/logout',views.admin_log_out,name="admin_log_out"),
     path('tickets/<str:main_user_name>&<str:main_ticket_title>&<str:main_ticket_status>',views.ticket_details),

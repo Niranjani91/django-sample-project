@@ -6,6 +6,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    
+      
+      <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
@@ -64,5 +68,48 @@
           </tbody>
       </table>
   </div>
+  <script>
+     window.onload = async function(){
+      var user_name = "{{user_name}}";
+      var url="http://127.0.0.1:8000/dailywork/tickets"+"/"+user_name;
+                let response = await fetch(url);
+                var data = await response.json();
+                try{
+                    if(response.status==200){
+                        console.log(data);
+                        console.log(url);
+                        populateUserTicketsTable(data);
+                    }
+                }
+                catch(err){
+                    console.log(err);
+                }
+            }
+            function populateUserTicketsTable(data){
+              $("#tickets_data").empty()
+                if(data.length>0){
+                    data.forEach((itemData) => {
+                        var row_entry = $("<tr/>")
+                        var title = $("<td/>").html(itemData.ticket_title);
+                        var description = $("<td/>").html(itemData.ticket_description);
+                        var status = $("<td/>").html(itemData.ticket_status);
+                        const arra= [itemData.username,itemData.ticket_title,itemData.ticket_description,itemData.ticket_status];
+                        $('#'+arra).toArray
+                        var editBtn = $("<button/>").addClass("btn btn-sm").css("background-color","white").css("color","black").css("font-size","10px").attr("onClick",'modalShower()').html("edit");
+                        var deleteBtn = $("<button/>").addClass("btn btn-sm").css("background-color","white").css("color","black").css("font-size","10px").click(function(){deleteTicket(itemData.username,itemData.ticket_title,itemData.ticket_description,itemData.ticket_status);}).html("delete");
+                        var edit = $('<td/>').css("text-align","center").append(editBtn);
+                        var delet = $("<td/>").css("text-align","center").append(deleteBtn);
+                        row_entry.append(title);
+                        row_entry.append(description);
+                        
+                        row_entry.append(edit);
+
+                        row_entry.append(delet);
+                        row_entry.append(status);
+                        $("#tickets_data").append(row_entry)
+                    });
+                }
+            }
+  </script>
   </body>
 </html>
