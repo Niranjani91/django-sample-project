@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,include
 from . import views
 
 urlpatterns = [
@@ -22,5 +22,5 @@ urlpatterns = [
     path('admin/tickets_list',views.tickets_list,name="tickets_list"),
     path('admin/logout',views.admin_log_out,name="admin_log_out"),
     path('tickets/<str:main_user_name>&<str:main_ticket_title>&<str:main_ticket_status>',views.ticket_details),
-    path('<str:main_user_name>/logout',views.user_logout_page,name='user_logout_page')
+    path('<str:main_user_name>/logout',views.user_logout_page,name='user_logout_page'),
 ]

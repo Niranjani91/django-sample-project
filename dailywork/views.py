@@ -40,7 +40,7 @@ def register(request):
 
 def admin_log_out(request):
     logout(request)
-    return redirect('home')
+    return redirect('index')
 
 
 
@@ -59,7 +59,7 @@ def tickets_list(request):
 
 def user_logout_page(request,main_user_name):
     logout(request)
-    return redirect('home')
+    return redirect('index')
 
 def login(request):
     if request.method == 'POST':

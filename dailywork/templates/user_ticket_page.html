@@ -18,7 +18,51 @@
         }
     </style>
   </head>
-  <body id="body_of_the_ticket_page">
-    <p>fwniflmrw.</p>
+  <body id="body_of_the_ticket_page" style="background-color: #BC8F8F;">
+    <div class="content" style="padding:30px 30px 30px 30px;">
+      <section class="container my-2 w-100 text-light" style="padding: 30px 30px 20px 30px;">
+          <div class="row">
+              <div class="col md-2">
+                  <p style="color:black;"> the following are the list of tickets</p>
+              </div>
+              <div class="col md-8"></div>
+              <div class="col md-1">
+                <a href="#" class="nav-link dropdown-toggle mx-3 " style="color:black" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">all</a>
+                <ul class="dropdown-menu" style="background-color:black;color:#BC8F8F" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" style="color:#BC8F8F">open</a></li>
+                    
+                    <li><a class="dropdown-item" style="color:#BC8F8F">closed</a></li>
+                    <li><a class="dropdown-item" style="color:#BC8F8F">all</a></li>
+                  </ul>
+              </div>
+              <div class="col md-1">
+                  <button class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#create_a_new_ticket_details_modal" style="background-color: white;color: black;">create</button>
+              </div>
+          </div>
+      </section>
+      <table class="table" id="tickets_table" >
+          <thead>
+              <tr>
+                  <th>
+                      ticket
+                  </th>
+                  <th>
+                    description
+                  </th>
+                  <th>
+                      Edit
+                  </th>
+                  <th>
+                      Delete
+                  </th>
+                 <th>
+                       status
+                 </th>
+              </tr>
+          </thead>
+          <tbody class="table-body" id="tickets_data">
+          </tbody>
+      </table>
+  </div>
   </body>
 </html>
